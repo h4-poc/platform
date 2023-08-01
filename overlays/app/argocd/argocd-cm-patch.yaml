@@ -8,11 +8,8 @@ data:
       generate:
         command: ["bash", "-c"]
         args: ['argocd-cmp "kustomize"; kustomize build .']
-      discover:
-        fileName: "./kustomization.yaml"
+
     - name: helm-kustomize-template-plugin
       generate:
         command: ["bash", "-c"]
         args: ['argocd-cmp "helm"; kustomize build .']
-      discover:
-        fileName: "./kustomization.yaml"
