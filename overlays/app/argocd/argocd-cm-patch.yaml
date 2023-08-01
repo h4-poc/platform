@@ -9,10 +9,10 @@ data:
         command: ["bash", "-c"]
         args: ['argocd-cmp "kustomize"; kustomize build .']
       discover:
-        filename: "./kustomization.yaml"
+        fileName: "./kustomization.yaml"
     - name: helm-kustomize-template-plugin
       generate:
         command: ["bash", "-c"]
         args: ['argocd-cmp "helm"; kustomize build .']
       discover:
-        filename: "./kustomization.yaml"
+        fileName: "./kustomization.yaml"
