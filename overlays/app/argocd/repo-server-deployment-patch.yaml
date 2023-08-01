@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-repo-server
+spec:
+  template:
+    spec:
+      containers:
+      - name: argocd-repo-server
+        volumeMounts:
+        - name: custom-tools
+          mountPath: /usr/local/bin/argocd-vault-plugin
+          subPath: argocd-vault-plugin
+        - name: custom-tools
+          mountPath: /usr/local/bin/yq
+          subPath: yq
+        - name: custom-argocd-cmp
+          mountPath: /usr/local/bin/argocd-cmp
+          subPath: argocd-cmp
+      initContainers:
+      - name: download-tools
+        image: alpine:3.8
+        command: [ sh, -c ]
+        env:
+          - name: AVP_VERSION
+            value: "1.15.0"
+        args:
+          - >-
+            wget -O argocd-vault-plugin
+            https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v${AVP_VERSION}/argocd-vault-plugin_${AVP_VERSION}_linux_amd64 &&
+            chmod +x argocd-vault-plugin &&
+            mv argocd-vault-plugin /custom-tools/;
+            wget -O yq
+            https://github.com/mikefarah/yq/releases/download/v4.34.2/yq_linux_amd64 &&
+            chmod +x yq &&
+            mv yq /custom-tools/;
+        volumeMounts:
+          - mountPath: /custom-tools
+            name: custom-tools
+      volumes:
+      - name: custom-tools
+        emptyDir: { }
+      - name: custom-argocd-cmp
+        configMap:
+          name: argocd-cm-script
+          defaultMode: 0755
+          items:
+            - key: argocd-cmp.sh
+              path: argocd-cmp
+      automountServiceAccountToken: true
+

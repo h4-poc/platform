@@ -10,5 +10,6 @@ patchesStrategicMerge:
   - argocd-cm-patch.yaml
   - repo-server-role.yaml
   - repo-server-rolebinding.yaml
+  - repo-server-deployment-patch.yaml
 
 
