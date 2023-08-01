@@ -5,11 +5,11 @@ resources:
   - manifest.yaml
   - argo-repo-secret.yaml
   - nodeport.yaml
+  - repo-server-role.yaml
+  - repo-server-rolebinding.yaml
 
 patchesStrategicMerge:
   - argocd-cm-patch.yaml
-  - repo-server-role.yaml
-  - repo-server-rolebinding.yaml
   - repo-server-deployment-patch.yaml
 
 
