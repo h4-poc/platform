@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: repo-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/component: repo-server
+  name: argocd-repo-server
+rules:
+- apiGroups:
+    - '*'
+  resources:
+  - configmaps
+  - secrets
+  verbs:
+  - get
+  - list
