@@ -7,9 +7,9 @@ resources:
   - nodeport.yaml
   - repo-server-role.yaml
   - repo-server-rolebinding.yaml
-
+  - argocd-cm-plugin.yaml
 patchesStrategicMerge:
-  - argocd-cm-patch.yaml
   - repo-server-deployment-patch.yaml
+  -
 
 

@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kustomize-template-plugin
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: kustomize-template-plugin
+    spec:
+      version: v1.0
+      generate:
+        command: ["bash", "-c"]
+        args: ['argocd-cmp "kustomize"; kustomize build .']
+      discover:
+        fileName: "./kustomization.yaml"
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: helm-kustomize-template-plugin
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: helm-kustomize-template-plugin
+    spec:
+      version: v1.0
+      generate:
+        command: ["bash", "-c"]
+        args: ['argocd-cmp "helm"; kustomize build .']
+      discover:
+        fileName: "./kustomization.yaml"

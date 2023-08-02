@@ -17,6 +17,54 @@ spec:
         - name: custom-argocd-cmp
           mountPath: /usr/local/bin/argocd-cmp
           subPath: argocd-cmp
+      - name: kustomize-template-plugin
+        command:
+          - "/var/run/argocd/argocd-cmp-server"
+        image: quay.io/argoproj/argocd:latest
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 999
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - name: custom-tools
+            mountPath: /usr/local/bin/argocd-vault-plugin
+            subPath: argocd-vault-plugin
+          - name: custom-tools
+            mountPath: /usr/local/bin/yq
+            subPath: yq
+          - name: custom-argocd-cmp
+            mountPath: /usr/local/bin/argocd-cmp
+            subPath: argocd-cmp
+          - name: plugin
+            mountPath: /home/argocd/cmp-server/plugins
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            subPath: plugin.yaml
+            name: kustomize-template-plugin
+      - name: helm-kustomize-template-plugin
+        command:
+          - "/var/run/argocd/argocd-cmp-server"
+        image: quay.io/argoproj/argocd:latest
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 999
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - name: custom-tools
+            mountPath: /usr/local/bin/argocd-vault-plugin
+            subPath: argocd-vault-plugin
+          - name: custom-tools
+            mountPath: /usr/local/bin/yq
+            subPath: yq
+          - name: custom-argocd-cmp
+            mountPath: /usr/local/bin/argocd-cmp
+            subPath: argocd-cmp
+          - name: plugin
+            mountPath: /home/argocd/cmp-server/plugins
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            subPath: plugin.yaml
+            name: helm-kustomize-template-plugin
       initContainers:
       - name: download-tools
         image: alpine:3.8
@@ -47,5 +95,11 @@ spec:
           items:
             - key: argocd-cmp.sh
               path: argocd-cmp
+      - name: kustomize-template-plugin
+        configMap:
+          name: kustomize-template-plugin
+      - name:
+        configMap:
+          name: helm-kustomize-template-plugin
       automountServiceAccountToken: true
 
