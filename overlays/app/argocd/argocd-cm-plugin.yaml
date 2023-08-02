@@ -9,7 +9,6 @@ data:
     metadata:
       name: kustomize-template-plugin
     spec:
-      version: v1.0
       generate:
         command: ["bash", "-c"]
         args: ['argocd-cmp "kustomize"; kustomize build .']
@@ -28,7 +27,6 @@ data:
     metadata:
       name: helm-kustomize-template-plugin
     spec:
-      version: v1.0
       generate:
         command: ["bash", "-c"]
         args: ['argocd-cmp "helm"; kustomize build .']
