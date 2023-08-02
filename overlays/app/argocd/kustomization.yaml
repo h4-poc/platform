@@ -11,5 +11,9 @@ resources:
 patchesStrategicMerge:
   - repo-server-deployment-patch.yaml
 
+labels:
+  - pairs:
+      self-managed-argocd: "true"
+
 
 
