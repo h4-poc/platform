@@ -98,7 +98,7 @@ spec:
       - name: kustomize-template-plugin
         configMap:
           name: kustomize-template-plugin
-      - name:
+      - name: helm-kustomize-template-plugin
         configMap:
           name: helm-kustomize-template-plugin
       automountServiceAccountToken: true
