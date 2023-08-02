@@ -36,7 +36,7 @@ spec:
           - name: custom-argocd-cmp
             mountPath: /usr/local/bin/argocd-cmp
             subPath: argocd-cmp
-          - name: plugin
+          - name: plugins
             mountPath: /home/argocd/cmp-server/plugins
           - mountPath: /home/argocd/cmp-server/config/plugin.yaml
             subPath: plugin.yaml
@@ -60,7 +60,7 @@ spec:
           - name: custom-argocd-cmp
             mountPath: /usr/local/bin/argocd-cmp
             subPath: argocd-cmp
-          - name: plugin
+          - name: plugins
             mountPath: /home/argocd/cmp-server/plugins
           - mountPath: /home/argocd/cmp-server/config/plugin.yaml
             subPath: plugin.yaml
