@@ -24,7 +24,7 @@ metadata:
 type: Opaque
 data:
   VAULT_ADDR: YXBwLXZhdWx0LmFwcC12YXVsdC5zdmMuY2x1c3Rlci5sb2NhbAo=
-  VAULT_TOKEN: <platform-vault-token>
+  VAULT_TOKEN: <app-vault-token>
   AVP_TYPE: dmF1bHQ=
   AVP_AUTH_TYPE: dG9rZW4=
 
