@@ -7,7 +7,7 @@ metadata:
    avp.kubernetes.io/path: "k8s-kv/data/platform/platform-vault"
 type: Opaque
 data:
-  VAULT_ADDR: cGxhdGZvcm0tdmF1bHQucGxhdGZvcm0tdmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwK
+  VAULT_ADDR: aHR0cDovL3BsYXRmb3JtLXZhdWx0LnBsYXRmb3JtLXZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsOjgyMDA=
   VAULT_TOKEN: <platform-vault-token>
   AVP_TYPE: dmF1bHQ=
   AVP_AUTH_TYPE: dG9rZW4=
@@ -23,7 +23,7 @@ metadata:
    avp.kubernetes.io/path: "k8s-kv/data/platform/app-vault"
 type: Opaque
 data:
-  VAULT_ADDR: YXBwLXZhdWx0LmFwcC12YXVsdC5zdmMuY2x1c3Rlci5sb2NhbAo=
+  VAULT_ADDR: aHR0cDovL2FwcC12YXVsdC5hcHAtdmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWw6ODIwMA==
   VAULT_TOKEN: <app-vault-token>
   AVP_TYPE: dmF1bHQ=
   AVP_AUTH_TYPE: dG9rZW4=
