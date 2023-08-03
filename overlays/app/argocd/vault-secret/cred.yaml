@@ -4,7 +4,7 @@ metadata:
  name: vault-platform-cred
  namespace: argocd
  annotations:
-   avp.kubernetes.io/path: "k8s-kv/platform/data"
+   avp.kubernetes.io/path: "k8s-kv/platform/data/platform-vault"
 type: Opaque
 data:
   VAULT_ADDR: cGxhdGZvcm0tdmF1bHQucGxhdGZvcm0tdmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwK
@@ -20,7 +20,7 @@ metadata:
  name: vault-app-cred
  namespace: argocd
  annotations:
-   avp.kubernetes.io/path: "k8s-kv/platform/data"
+   avp.kubernetes.io/path: "k8s-kv/platform/data/app-vault"
 type: Opaque
 data:
   VAULT_ADDR: YXBwLXZhdWx0LmFwcC12YXVsdC5zdmMuY2x1c3Rlci5sb2NhbAo=
