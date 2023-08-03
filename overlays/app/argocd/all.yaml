@@ -5,6 +5,7 @@ metadata:
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-application-controller
 ---
 apiVersion: v1
@@ -14,6 +15,7 @@ metadata:
     app.kubernetes.io/component: dex-server
     app.kubernetes.io/name: argocd-dex-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-dex-server
 ---
 apiVersion: v1
@@ -23,6 +25,7 @@ metadata:
     app.kubernetes.io/component: redis
     app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-redis
 ---
 apiVersion: v1
@@ -32,6 +35,7 @@ metadata:
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-repo-server
 ---
 apiVersion: v1
@@ -41,6 +45,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-server
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -50,6 +55,7 @@ metadata:
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-application-controller
 rules:
 - apiGroups:
@@ -89,6 +95,7 @@ metadata:
     app.kubernetes.io/component: dex-server
     app.kubernetes.io/name: argocd-dex-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-dex-server
 rules:
 - apiGroups:
@@ -108,6 +115,7 @@ metadata:
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/name: repo-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-repo-server
 rules:
 - apiGroups:
@@ -126,6 +134,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-server
 rules:
 - apiGroups:
@@ -170,6 +179,7 @@ metadata:
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-application-controller
 rules:
 - apiGroups:
@@ -190,6 +200,7 @@ metadata:
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-application-controller
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -206,6 +217,7 @@ metadata:
     app.kubernetes.io/component: dex-server
     app.kubernetes.io/name: argocd-dex-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-dex-server
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -219,9 +231,28 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   labels:
+    app.kubernetes.io/component: repo-server
+    app.kubernetes.io/name: repo-server
+    app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
+  name: argocd-repo-server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argocd-repo-server
+subjects:
+- kind: ServiceAccount
+  name: argocd-repo-server
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-server
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -238,6 +269,7 @@ metadata:
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-application-controller
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -248,70 +280,48 @@ subjects:
   name: argocd-application-controller
   namespace: argocd
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: repo-server
-    app.kubernetes.io/name: repo-server
-    app.kubernetes.io/part-of: argocd
-  name: argocd-repo-server
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: argocd-repo-server
-subjects:
-- kind: ServiceAccount
-  name: argocd-repo-server
-  namespace: argocd
----
 apiVersion: v1
-data:
-  configManagementPlugins: |-
-    - name: kustomize-template-plugin
-      generate:
-        command: ["bash", "-c"]
-        args: ['argocd-cmp "kustomize"; kustomize build .']
-      discover:
-        filename: "./kustomization.yaml"
-    - name: helm-kustomize-template-plugin
-      generate:
-        command: ["bash", "-c"]
-        args: ['argocd-cmp "helm"; kustomize build .']
-      discover:
-        filename: "./kustomization.yaml"
 kind: ConfigMap
 metadata:
   labels:
     app.kubernetes.io/name: argocd-cm
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-cm
 ---
 apiVersion: v1
 data:
   argocd-cmp.sh: |-
     #!/usr/bin/env bash
-
+    pwd > /tmp/test.txt
+    echo "----" >> /tmp/test.txt
     if [[ "$1" == "helm" ]];then
       helm template ${ARGOCD_ENV_BASEPATH} --name-template ${ARGOCD_APP_NAME} --namespace ${ARGOCD_APP_NAMESPACE} \
         --values ${ARGOCD_ENV_VALUEFILES} > staging-manifest.yaml
     elif [ "$1" == "kustomize" ]; then
       kustomize build ${ARGOCD_ENV_BASEPATH} > staging-manifest.yaml
     fi
-
-    [[ -d "vault-secret"]] && find vault-secret -type f -name "*.yaml" | xargs -I {} sh -c "printf '\n---\n'; cat {};" > vault-secrets.yaml
-
+    ls -l >> /tmp/test.txt
+    [[ -d "vault-secret" ]] && find vault-secret -type f -name "*.yaml" | xargs -I {} sh -c "printf '\n---\n'; cat {};" > vault-secrets.yaml
+    echo "----" >> /tmp/test.txt
+    ls >> /tmp/test.txt
+    cat vault-secrets.yaml >> /tmp/test.txt
     if [[ -s "vault-secrets.yaml" ]];then
       yq 'select(.metadata.annotations."avp.kubernetes.io/path"?==("k8s-kv/platform/*"))' vault-secrets.yaml > platform-secrets.yaml
       yq 'select(.metadata.annotations."avp.kubernetes.io/path"?==("k8s-kv/app/*"))' vault-secrets.yaml > app-secrets.yaml
     fi
-
-    if [[ -s "platform-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate platform-secrets.yaml -s vault-platform-cred >> staging-manifest.yaml
-    if [[ -s "app-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate app-secrets.yaml -s vault-app-cred >> staging-manifest.yaml
-
+    echo "----" >> /tmp/test.txt
+    ls >> /tmp/test.txt
+    [[ -s "platform-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate platform-secrets.yaml -s vault-platform-cred >> staging-manifest.yaml
+    [[ -s "app-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate app-secrets.yaml -s vault-app-cred >> staging-manifest.yaml
+    echo "---" >> /tmp/test.txt
+    cat staging-manifest.yaml >> /tmp/test.txt
     mv staging-manifest.yaml manifest.yaml
+    echo "task done ----- beer"
 kind: ConfigMap
 metadata:
+  labels:
+    self-managed-argocd: enable
   name: argocd-cm-script
 ---
 apiVersion: v1
@@ -320,6 +330,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-cmd-params-cm
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-cmd-params-cm
 ---
 apiVersion: v1
@@ -328,6 +339,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-gpg-keys-cm
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-gpg-keys-cm
 ---
 apiVersion: v1
@@ -336,6 +348,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-rbac-cm
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-rbac-cm
 ---
 apiVersion: v1
@@ -361,6 +374,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-ssh-known-hosts-cm
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-ssh-known-hosts-cm
 ---
 apiVersion: v1
@@ -369,7 +383,46 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-tls-certs-cm
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-tls-certs-cm
+---
+apiVersion: v1
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: helm-kustomize-template-plugin
+    spec:
+      generate:
+        command: ["bash", "-c"]
+        args: ['argocd-cmp "helm"; kustomize build .']
+      discover:
+        fileName: "./kustomization.yaml"
+kind: ConfigMap
+metadata:
+  labels:
+    self-managed-argocd: enable
+  name: helm-kustomize-template-plugin
+---
+apiVersion: v1
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: kustomize-template-plugin
+    spec:
+      generate:
+        command: ["bash", "-c"]
+        args: ['argocd-cmp "kustomize"; kustomize build .']
+      discover:
+        fileName: "./kustomization.yaml"
+kind: ConfigMap
+metadata:
+  labels:
+    self-managed-argocd: enable
+  name: kustomize-template-plugin
 ---
 apiVersion: v1
 data:
@@ -382,6 +435,7 @@ kind: Secret
 metadata:
   labels:
     argocd.argoproj.io/secret-type: repository
+    self-managed-argocd: enable
   name: governed-repo
   namespace: argocd
 type: Opaque
@@ -397,6 +451,7 @@ kind: Secret
 metadata:
   labels:
     argocd.argoproj.io/secret-type: repository
+    self-managed-argocd: enable
   name: platform-repo
   namespace: argocd
 type: Opaque
@@ -407,6 +462,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd-secret
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-secret
 type: Opaque
 ---
@@ -417,6 +473,7 @@ metadata:
     app.kubernetes.io/component: dex-server
     app.kubernetes.io/name: argocd-dex-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-dex-server
 spec:
   ports:
@@ -442,6 +499,7 @@ metadata:
     app.kubernetes.io/component: metrics
     app.kubernetes.io/name: argocd-metrics
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-metrics
 spec:
   ports:
@@ -459,6 +517,7 @@ metadata:
     app.kubernetes.io/component: redis
     app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-redis
 spec:
   ports:
@@ -475,6 +534,7 @@ metadata:
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-repo-server
 spec:
   ports:
@@ -496,6 +556,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-server
 spec:
   ports:
@@ -517,6 +578,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server-metrics
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-server-metrics
 spec:
   ports:
@@ -534,6 +596,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-server-nodeport
 spec:
   ports:
@@ -556,6 +619,7 @@ metadata:
     app.kubernetes.io/component: dex-server
     app.kubernetes.io/name: argocd-dex-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-dex-server
 spec:
   selector:
@@ -657,6 +721,7 @@ metadata:
     app.kubernetes.io/component: redis
     app.kubernetes.io/name: argocd-redis
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-redis
 spec:
   selector:
@@ -713,6 +778,7 @@ metadata:
     app.kubernetes.io/component: repo-server
     app.kubernetes.io/name: argocd-repo-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-repo-server
 spec:
   selector:
@@ -936,6 +1002,54 @@ spec:
           name: helm-working-dir
         - mountPath: /home/argocd/cmp-server/plugins
           name: plugins
+      - command:
+        - /var/run/argocd/argocd-cmp-server
+        image: quay.io/argoproj/argocd:latest
+        name: kustomize-template-plugin
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 999
+        volumeMounts:
+        - mountPath: /var/run/argocd
+          name: var-files
+        - mountPath: /usr/local/bin/argocd-vault-plugin
+          name: custom-tools
+          subPath: argocd-vault-plugin
+        - mountPath: /usr/local/bin/yq
+          name: custom-tools
+          subPath: yq
+        - mountPath: /usr/local/bin/argocd-cmp
+          name: custom-argocd-cmp
+          subPath: argocd-cmp
+        - mountPath: /home/argocd/cmp-server/plugins
+          name: plugins
+        - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+          name: kustomize-template-plugin
+          subPath: plugin.yaml
+      - command:
+        - /var/run/argocd/argocd-cmp-server
+        image: quay.io/argoproj/argocd:latest
+        name: helm-kustomize-template-plugin
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 999
+        volumeMounts:
+        - mountPath: /var/run/argocd
+          name: var-files
+        - mountPath: /usr/local/bin/argocd-vault-plugin
+          name: custom-tools
+          subPath: argocd-vault-plugin
+        - mountPath: /usr/local/bin/yq
+          name: custom-tools
+          subPath: yq
+        - mountPath: /usr/local/bin/argocd-cmp
+          name: custom-argocd-cmp
+          subPath: argocd-cmp
+        - mountPath: /home/argocd/cmp-server/plugins
+          name: plugins
+        - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+          name: helm-kustomize-template-plugin
+          subPath: plugin.yaml
       initContainers:
       - args:
         - wget -O argocd-vault-plugin https://github.com/argoproj-labs/argocd-vault-plugin/releases/download/v${AVP_VERSION}/argocd-vault-plugin_${AVP_VERSION}_linux_amd64
@@ -984,6 +1098,12 @@ spec:
           name: argocd-cm-script
         name: custom-argocd-cmp
       - configMap:
+          name: kustomize-template-plugin
+        name: kustomize-template-plugin
+      - configMap:
+          name: helm-kustomize-template-plugin
+        name: helm-kustomize-template-plugin
+      - configMap:
           name: argocd-ssh-known-hosts-cm
         name: ssh-known-hosts
       - configMap:
@@ -1021,6 +1141,7 @@ metadata:
     app.kubernetes.io/component: server
     app.kubernetes.io/name: argocd-server
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-server
 spec:
   selector:
@@ -1335,6 +1456,7 @@ metadata:
     app.kubernetes.io/component: application-controller
     app.kubernetes.io/name: argocd-application-controller
     app.kubernetes.io/part-of: argocd
+    self-managed-argocd: enable
   name: argocd-application-controller
 spec:
   replicas: 1
@@ -1545,6 +1667,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  labels:
+    self-managed-argocd: enable
   name: argocd-application-controller-network-policy
 spec:
   ingress:
@@ -1561,6 +1685,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  labels:
+    self-managed-argocd: enable
   name: argocd-dex-server-network-policy
 spec:
   ingress:
@@ -1587,6 +1713,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  labels:
+    self-managed-argocd: enable
   name: argocd-redis-network-policy
 spec:
   egress:
@@ -1619,6 +1747,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  labels:
+    self-managed-argocd: enable
   name: argocd-repo-server-network-policy
 spec:
   ingress:
@@ -1651,6 +1781,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  labels:
+    self-managed-argocd: enable
   name: argocd-server-network-policy
 spec:
   ingress:

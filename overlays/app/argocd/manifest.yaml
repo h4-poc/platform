@@ -242,25 +242,31 @@ apiVersion: v1
 data:
   argocd-cmp.sh: |-
     #!/usr/bin/env bash
-
+    pwd > /tmp/test.txt
+    echo "----" >> /tmp/test.txt
     if [[ "$1" == "helm" ]];then
       helm template ${ARGOCD_ENV_BASEPATH} --name-template ${ARGOCD_APP_NAME} --namespace ${ARGOCD_APP_NAMESPACE} \
         --values ${ARGOCD_ENV_VALUEFILES} > staging-manifest.yaml
     elif [ "$1" == "kustomize" ]; then
       kustomize build ${ARGOCD_ENV_BASEPATH} > staging-manifest.yaml
     fi
-
-    [[ -d "vault-secret"]] && find vault-secret -type f -name "*.yaml" | xargs -I {} sh -c "printf '\n---\n'; cat {};" > vault-secrets.yaml
-
+    ls -l >> /tmp/test.txt
+    [[ -d "vault-secret" ]] && find vault-secret -type f -name "*.yaml" | xargs -I {} sh -c "printf '\n---\n'; cat {};" > vault-secrets.yaml
+    echo "----" >> /tmp/test.txt
+    ls >> /tmp/test.txt
+    cat vault-secrets.yaml >> /tmp/test.txt
     if [[ -s "vault-secrets.yaml" ]];then
       yq 'select(.metadata.annotations."avp.kubernetes.io/path"?==("k8s-kv/platform/*"))' vault-secrets.yaml > platform-secrets.yaml
       yq 'select(.metadata.annotations."avp.kubernetes.io/path"?==("k8s-kv/app/*"))' vault-secrets.yaml > app-secrets.yaml
     fi
-
-    if [[ -s "platform-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate platform-secrets.yaml -s vault-platform-cred >> staging-manifest.yaml
-    if [[ -s "app-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate app-secrets.yaml -s vault-app-cred >> staging-manifest.yaml
-
+    echo "----" >> /tmp/test.txt
+    ls >> /tmp/test.txt
+    [[ -s "platform-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate platform-secrets.yaml -s vault-platform-cred >> staging-manifest.yaml
+    [[ -s "app-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate app-secrets.yaml -s vault-app-cred >> staging-manifest.yaml
+    echo "---" >> /tmp/test.txt
+    cat staging-manifest.yaml >> /tmp/test.txt
     mv staging-manifest.yaml manifest.yaml
+    echo "task done ----- beer"
 kind: ConfigMap
 metadata:
   name: argocd-cm-script
