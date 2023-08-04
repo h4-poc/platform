@@ -3,3 +3,12 @@ kind: Kustomization
 
 resources:
   - manifest.yaml
+
+patches:
+  - patch: |-
+      - op: replace
+        path: /spec/type
+        value: ClusterIP
+    target:
+      kind: Service
+      name: flask-demo-helm
