@@ -12,7 +12,7 @@ patchesStrategicMerge:
 
 labels:
   - pairs:
-      self-managed-argocd: "yes"
+      self-managed-argocd: "true"
 
 
 
