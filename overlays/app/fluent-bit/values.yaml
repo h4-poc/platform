@@ -388,7 +388,7 @@ config:
     [OUTPUT]
         Name            forward
         Match           kube.nginx.*
-        Host            fluentd-fluentd
+        Host            fluentd
         Tag             kube.nginx.*
         Port            24224
 
