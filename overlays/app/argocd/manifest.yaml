@@ -240,33 +240,25 @@ metadata:
 ---
 apiVersion: v1
 data:
-  argocd-cmp.sh: |-
+  argocd-cmp.sh: |
     #!/usr/bin/env bash
-    pwd > /tmp/test.txt
-    echo "----" >> /tmp/test.txt
+
     if [[ "$1" == "helm" ]];then
       helm template ${ARGOCD_ENV_BASEPATH} --name-template ${ARGOCD_APP_NAME} --namespace ${ARGOCD_APP_NAMESPACE} \
         --values ${ARGOCD_ENV_VALUEFILES} > staging-manifest.yaml
     elif [ "$1" == "kustomize" ]; then
       kustomize build ${ARGOCD_ENV_BASEPATH} > staging-manifest.yaml
     fi
-    ls -l >> /tmp/test.txt
+
     [[ -d "vault-secret" ]] && find vault-secret -type f -name "*.yaml" | xargs -I {} sh -c "printf '\n---\n'; cat {};" > vault-secrets.yaml
-    echo "----" >> /tmp/test.txt
-    ls >> /tmp/test.txt
-    cat vault-secrets.yaml >> /tmp/test.txt
+
     if [[ -s "vault-secrets.yaml" ]];then
-      yq 'select(.metadata.annotations."avp.kubernetes.io/path"?==("k8s-kv/platform/*"))' vault-secrets.yaml > platform-secrets.yaml
-      yq 'select(.metadata.annotations."avp.kubernetes.io/path"?==("k8s-kv/app/*"))' vault-secrets.yaml > app-secrets.yaml
+      yq 'select(.metadata.annotations."avp.kubernetes.io/path"?==("k8s-kv/data/platform/*"))' vault-secrets.yaml > platform-secrets.yaml
+      yq 'select(.metadata.annotations."avp.kubernetes.io/path"?==("k8s-kv/data/app/*"))' vault-secrets.yaml > app-secrets.yaml
     fi
-    echo "----" >> /tmp/test.txt
-    ls >> /tmp/test.txt
     [[ -s "platform-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate platform-secrets.yaml -s vault-platform-cred >> staging-manifest.yaml
     [[ -s "app-secrets.yaml" ]] && printf '\n---\n' >> staging-manifest.yaml && argocd-vault-plugin generate app-secrets.yaml -s vault-app-cred >> staging-manifest.yaml
-    echo "---" >> /tmp/test.txt
-    cat staging-manifest.yaml >> /tmp/test.txt
     mv staging-manifest.yaml manifest.yaml
-    echo "task done ----- beer"
 kind: ConfigMap
 metadata:
   name: argocd-cm-script
@@ -1531,3 +1523,38 @@ spec:
       app.kubernetes.io/name: argocd-server
   policyTypes:
   - Ingress
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: platform-repo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+type: Opaque
+data:
+  name: cGxhdGZvcm0K
+  type: Z2l0
+  project: ZGVmYXVsdA==
+  url: Z2l0QGdpdGh1Yi5jb206QmVlckxpaS9wbGF0Zm9ybS5naXQ=
+  sshPrivateKey: LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFBQUFBQkc1dmJtVUFBQUFFYm05dVpRQUFBQUFBQUFBQkFBQUFNd0FBQUF0emMyZ3RaVwpReU5UVXhPUUFBQUNBb2hwdDllNTdsczAyendPTHlzclJ2S1RwMTBBVDNBZkROZjVnWnRsRjE0d0FBQUpqaFpLVHk0V1NrCjhnQUFBQXR6YzJndFpXUXlOVFV4T1FBQUFDQW9ocHQ5ZTU3bHMwMnp3T0x5c3JSdktUcDEwQVQzQWZETmY1Z1p0bEYxNHcKQUFBRUFIbk5HcE9ETVJxOFFCUWVwc004KzROZ1ZySUI4Z0hUSy85T3d6Qnk4MUhDaUdtMzE3bnVXelRiUEE0dkt5dEc4cApPblhRQlBjQjhNMS9tQm0yVVhYakFBQUFFRGN6TlRrMk5EQXpNMEJ4Y1M1amIyMEJBZ01FQlE9PQotLS0tLUVORCBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0K
+
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: governed-repo
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+type: Opaque
+data:
+  name: Z292ZXJuZWQK
+  type: Z2l0
+  url: Z2l0QGdpdGh1Yi5jb206QmVlckxpaS9nb3Zlcm5lZC5naXQ=
+  project: ZGVmYXVsdA==
+  sshPrivateKey: LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFBQUFBQkc1dmJtVUFBQUFFYm05dVpRQUFBQUFBQUFBQkFBQUFNd0FBQUF0emMyZ3RaVwpReU5UVXhPUUFBQUNBb2hwdDllNTdsczAyendPTHlzclJ2S1RwMTBBVDNBZkROZjVnWnRsRjE0d0FBQUpqaFpLVHk0V1NrCjhnQUFBQXR6YzJndFpXUXlOVFV4T1FBQUFDQW9ocHQ5ZTU3bHMwMnp3T0x5c3JSdktUcDEwQVQzQWZETmY1Z1p0bEYxNHcKQUFBRUFIbk5HcE9ETVJxOFFCUWVwc004KzROZ1ZySUI4Z0hUSy85T3d6Qnk4MUhDaUdtMzE3bnVXelRiUEE0dkt5dEc4cApPblhRQlBjQjhNMS9tQm0yVVhYakFBQUFFRGN6TlRrMk5EQXpNMEJ4Y1M1amIyMEJBZ01FQlE9PQotLS0tLUVORCBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0K
+
+

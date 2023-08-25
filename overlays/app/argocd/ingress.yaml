@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-ingress
+  annotations:
+    nginx.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS" # 后端使用tls协议，设置代理后端服务器的代理协议类型，默认为 HTTP
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true" # 设置当前虚拟主机支持 HTTPS 请求时，是否将 HTTP 的请求强制跳转到 HTTPS 端口，全局默认为 true
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true" # ssl透传
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - argocd.bwei.live
+    secretName: argocd-secret
+  rules:
+  - host: argocd.bwei.live
+    http:
+      paths:
+      - path: / # 该配置表示将dev.xxx.com的请求转发到serviceName为nginx，servicePort为80的服务上
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: https
