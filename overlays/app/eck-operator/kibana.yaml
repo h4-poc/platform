@@ -1,0 +1,10 @@
+# Source: eck-stack/charts/eck-kibana/templates/kibana.yaml
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: release-name-eck-kibana
+spec:
+  version: 8.9.1
+  count: 1
+  elasticsearchRef:
+    name: elasticsearch
