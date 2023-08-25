@@ -34,5 +34,5 @@ spec:
           service:
             name: release-name-eck-kibana-kb-http
             port:
-              name: https
+              name: http
 
