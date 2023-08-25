@@ -3382,6 +3382,7 @@ data:
     </label>
 
     @include config.d/*.conf
+    @include fluentd-prometheus-conf.d/*
 ---
 # Source: fluentd/templates/clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -3471,7 +3472,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 4bfa32201e0988957abbea06b14d7548c1fe3b77a75c0d4c310d32b3aab963b3
+        checksum/config: 65599c0989299191f894101869059ccb6dfa3a9def23e7f60baa4353bf440a1a
       labels:
         app.kubernetes.io/name: fluentd
         app.kubernetes.io/instance: release-name
@@ -3516,6 +3517,8 @@ spec:
           - name: varlibdockercontainers
             mountPath: /var/lib/docker/containers
             readOnly: true
+          - name: fluentd-prometheus-conf
+            mountPath: /etc/fluent/fluentd-prometheus-conf.d
       volumes:
       - name: etcfluentd-main
         configMap:
@@ -3531,6 +3534,10 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+      - name: fluentd-prometheus-conf
+        configMap:
+          name: fluentd-prometheus-conf-release-name
+          defaultMode: 0777
 ---
 # Source: fluentd/templates/tests/test-connection.yaml
 apiVersion: v1

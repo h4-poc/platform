@@ -56,10 +56,10 @@ lifecycle: {}
 
 # Configure the livenessProbe
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-livenessProbe: {}
-#  httpGet:
-#    path: /metrics
-#    port: metrics
+livenessProbe:
+  httpGet:
+    path: /metrics
+    port: metrics
   # initialDelaySeconds: 0
   # periodSeconds: 10
   # timeoutSeconds: 1
@@ -68,10 +68,10 @@ livenessProbe: {}
 
 # Configure the readinessProbe
 # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-readinessProbe: {}
-#  httpGet:
-#    path: /metrics
-#    port: metrics
+readinessProbe:
+  httpGet:
+    path: /metrics
+    port: metrics
   # initialDelaySeconds: 0
   # periodSeconds: 10
   # timeoutSeconds: 1
@@ -212,9 +212,8 @@ service:
 ##
 metrics:
   serviceMonitor:
-    enabled: false
-    additionalLabels:
-      release: prometheus-operator
+    enabled: true
+    additionalLabels: {}
     namespace: ""
     namespaceSelector: {}
     ## metric relabel configs to apply to samples before ingestion.
@@ -280,8 +279,8 @@ plugins: []
 
 ## Add fluentd config files from K8s configMaps
 ##
-configMapConfigs: []
-#  - fluentd-prometheus-conf
+configMapConfigs:
+  - fluentd-prometheus-conf
 #  - fluentd-systemd-conf
 
 ## Fluentd configurations:
