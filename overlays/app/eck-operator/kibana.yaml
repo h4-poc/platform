@@ -5,6 +5,13 @@ metadata:
   name: release-name-eck-kibana
 spec:
   version: 8.9.1
+  http:
+    service:
+      spec:
+        type: LoadBalancer
+    tls:
+      selfSignedCertificate:
+        disabled: true
   count: 1
   elasticsearchRef:
     name: elasticsearch
