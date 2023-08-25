@@ -10,6 +10,16 @@ spec:
     - config:
         node.store.allow_mmap: false
       count: 1
+      volumeClaimTemplates:
+      - metadata:
+          name: elasticsearch-data
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 20Gi
+          storageClassName: standard
       name: default
       podTemplate:
         spec:
@@ -20,14 +30,5 @@ spec:
                 memory: 3Gi
               requests:
                 memory: 1Gi
-          volumeClaimTemplates:
-            - metadata:
-                name: elasticsearch-data
-              spec:
-                accessModes:
-                  - ReadWriteOnce
-                resources:
-                  requests:
-                    storage: 20Gi
-                storageClassName: standard
+
 
