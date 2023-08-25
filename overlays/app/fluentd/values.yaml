@@ -301,7 +301,7 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-    <match kube.nginx.**>
+    <match kube.hello.**>
       @type stdout
     </match>
 
