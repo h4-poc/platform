@@ -390,10 +390,6 @@ config:
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
     [OUTPUT]
-#        Name            forward
-#        Match           kube.var.log.hello.*.*.*
-#        Host            fluentd
-#        Port            24224
       Name              stdout
       Match             k8s.hello.**
 
