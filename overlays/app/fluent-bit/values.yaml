@@ -383,6 +383,11 @@ config:
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         Labels              false
         Annotations         true
+    [FILTER]
+        Name                rewrite_tag
+        Match               kube.*
+        Rule                $log .*  k8s.$kubernetes['pod_name'].$kubernetes['namespace_name'] false
+        Emitter_Name        re_emitted
 
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
