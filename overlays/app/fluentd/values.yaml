@@ -301,7 +301,7 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-    <match kube.var.log.hello.**>
+    <match kube.var.log.hello.*.*.*>
       @type stdout
     </match>
 
