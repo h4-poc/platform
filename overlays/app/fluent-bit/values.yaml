@@ -391,7 +391,7 @@ config:
   outputs: |
     [OUTPUT]
         Name            forward
-        Match           kube.hello.*
+        Match           kube.var.log.hello.*
         Host            fluentd
         Tag             kube.hello.*
         Port            24224
