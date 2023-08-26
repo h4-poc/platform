@@ -390,8 +390,8 @@ config:
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
     [OUTPUT]
-      Name              stdout
-      Match             k8s.hello*
+        Name              stdout
+        Match             k8s.hello*
 
   ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/upstream-servers
   ## This configuration is deprecated, please use `extraFiles` instead.
