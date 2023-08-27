@@ -392,8 +392,10 @@ config:
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
     [OUTPUT]
-        Name              stdout
-        Match             *
+        Name              forward
+        Match             k8s.*
+        Host              fluentd
+        Port              24224
 
   ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/upstream-servers
   ## This configuration is deprecated, please use `extraFiles` instead.
