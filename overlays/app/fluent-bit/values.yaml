@@ -382,7 +382,7 @@ config:
         Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         Merge_Log           On
-        Merge_Log_Key       log
+        Merge_Log_Key       log_processed
         Keep_Log            On
         K8S-Logging.Parser  On
     [FILTER]
@@ -394,8 +394,10 @@ config:
   ## https://docs.fluentbit.io/manual/pipeline/outputs
   outputs: |
     [OUTPUT]
-        Name                stdout
-        Match               *
+        Name              forward
+        Match             k8s.*
+        Host              fluentd
+        Port              24224
 
   ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/upstream-servers
   ## This configuration is deprecated, please use `extraFiles` instead.
