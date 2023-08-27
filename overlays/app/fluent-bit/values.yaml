@@ -384,6 +384,7 @@ config:
         Merge_Log           On
         Merge_Log_Key       log
         Keep_Log            On
+        K8S-Logging.Parser  On
     [FILTER]
         Name                rewrite_tag
         Match               kube.*
