@@ -301,7 +301,7 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-    <match k8s.*>
+    <match k8s.**>
       @type stdout
     </match>
 
