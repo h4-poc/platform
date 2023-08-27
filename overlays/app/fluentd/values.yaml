@@ -295,15 +295,7 @@ fileConfigs:
     </source>
 
   02_filters.conf: |-
-    <filter k8s.**>
-      @type parser
-      key_name log
-      <parse>
-        @type regexp
-        expression /^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)"(?:\s+(?<http_x_forwarded_for>[^ ]+))?)?$/
-        time_format %d/%b/%Y:%H:%M:%S %z
-      </parse>
-    </filter>
+
   
 
   03_dispatch.conf: |-
