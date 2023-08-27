@@ -382,7 +382,7 @@ config:
         Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         Merge_Log           On
-        Merge_Log_Key       log_processed
+        Merge_Log_Key       log
         Keep_Log            On
     [FILTER]
         Name                rewrite_tag
