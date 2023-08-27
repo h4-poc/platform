@@ -367,7 +367,7 @@ config:
         Name              tail
         Tag               kube.*
         Path              /var/log/containers/*hello*.log
-        Parser            docker
+        Parser            docker_parser
         DB                /var/log/flb_kube_hello.db
         Mem_Buf_Limit     100MB
         Skip_Long_Lines   Off
@@ -410,7 +410,7 @@ config:
         Time_Key time
         Time_Format %Y-%m-%dT%H:%M:%S.%L
     [PARSER]
-        Name docker
+        Name docker_parser
         Format regex
         Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
         Time_Key    time
