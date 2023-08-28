@@ -315,7 +315,7 @@ fileConfigs:
 
     <match k8s.**>
         @type elasticsearch
-        scheme https
+        scheme http
         host "elasticsearch-es-default"
         port 9200
         logstash_format true
