@@ -47,8 +47,10 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: elasticsearch-es-http
-          servicePort: 9200
+          service:
+            name: elasticsearch-es-http
+            port:
+              name: http
         path: /
         pathType: Prefix
 
