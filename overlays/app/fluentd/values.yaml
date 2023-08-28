@@ -319,7 +319,7 @@ fileConfigs:
         host "elasticsearch-es-default"
         port 9200
         logstash_format true
-        logstash_prefix k8.${tag[1]}
+        logstash_prefix k8.${tag[2]}
         ssl_verify false
         user elastic
         password Xy0N6LjqZ6L9P131yOn792zT
