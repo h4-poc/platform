@@ -6,6 +6,10 @@ metadata:
   name: elasticsearch
 spec:
   version: 8.9.1
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
   nodeSets:
     - config:
         node.store.allow_mmap: false
