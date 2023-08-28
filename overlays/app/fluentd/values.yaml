@@ -312,16 +312,15 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-    <match k8s.**>
-      @type stdout
-    </match>
 
-#    <match **>
-#        @type elasticsearch
-#        scheme https
-#        host "elasticsearch-es-default"
-#        port 9200
-#        ssl_verify false
-#        user elastic
-#        password Xy0N6LjqZ6L9P131yOn792zT
-#    </match>
+    <match k8s.**>
+        @type elasticsearch
+        scheme https
+        host "elasticsearch-es-default"
+        port 9200
+        logstash_format true
+        logstash_prefix k8.${tag[1]}
+        ssl_verify false
+        user elastic
+        password Xy0N6LjqZ6L9P131yOn792zT
+    </match>
