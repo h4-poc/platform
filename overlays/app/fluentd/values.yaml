@@ -316,8 +316,8 @@ fileConfigs:
         @type file
         path  /var/log/k8s.buffer
         <buffer>
-          timekey 1h
-          timekey_wait 5m
+          timekey 2m
+          timekey_wait 5s
         </buffer>
     </match>
 
