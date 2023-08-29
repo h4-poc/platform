@@ -376,7 +376,7 @@ config:
         Mem_Buf_Limit     100MB
         Skip_Long_Lines   Off
         Refresh_Interval  10
-        storage.type      memory
+        storage.type      filesystem
         storage.pause_on_chunks_overlimit on
 
   ## https://docs.fluentbit.io/manual/pipeline/filters
