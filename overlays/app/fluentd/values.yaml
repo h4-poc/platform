@@ -312,6 +312,14 @@ fileConfigs:
 
 
   04_outputs.conf: |-
+    <match k8s.**>
+        @type file
+        path  /var/log/k8s.buffer
+        <buffer>
+          timekey 1h
+          timekey_wait 5m
+        </buffer>
+    </match>
 
     <match k8s.**>
         @type elasticsearch
