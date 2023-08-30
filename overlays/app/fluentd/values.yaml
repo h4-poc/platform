@@ -323,4 +323,10 @@ fileConfigs:
         ssl_verify false
         user elastic
         password Xy0N6LjqZ6L9P131yOn792zT
+        <buffer>
+          @type file
+          path  /var/log/k8s-buf
+          total_limit_size  8192M
+          overflow_action block
+        </buffer>
     </match>

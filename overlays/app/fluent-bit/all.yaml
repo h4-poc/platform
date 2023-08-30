@@ -32,6 +32,12 @@ data:
         Time_Keep On
         Time_Key time
         Time_Format %Y-%m-%dT%H:%M:%S.%L
+    [PARSER]
+        Name docker_parser
+        Format regex
+        Regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
     
   fluent-bit.conf: |
     [SERVICE]
@@ -44,32 +50,44 @@ data:
         HTTP_Listen 0.0.0.0
         HTTP_Port 2020
         Health_Check On
+        storage.path  /var/log/flb-storage
+        storage.sync  full
+        storage.metrics on
+        storage.delete_irrecoverable_chunks on
     
     [INPUT]
         Name              tail
-        Tag               kube.hello.*
+        Tag               kube.*
         Path              /var/log/containers/*hello*.log
-        Parser            docker
+        Parser            docker_parser
         DB                /var/log/flb_kube_hello.db
         Mem_Buf_Limit     100MB
         Skip_Long_Lines   Off
         Refresh_Interval  10
+        storage.type      filesystem
+        storage.pause_on_chunks_overlimit on
     
     [FILTER]
         Name                kubernetes
-        Match               kube.hello.*
+        Match               kube.*
         Kube_URL            https://kubernetes.default.svc:443
         Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
-        Kube_Tag_Prefix     k8s.hello.
         Merge_Log           On
         Merge_Log_Key       log_processed
+        Keep_Log            On
         K8S-Logging.Parser  On
-        K8S-Logging.Exclude Off
+    [FILTER]
+        Name                rewrite_tag
+        Match               kube.*
+        Rule                $log .*  k8s.$kubernetes['pod_name'].$kubernetes['namespace_name'] false
+        Emitter_Name        re_emitted
     
     [OUTPUT]
-        Name  stdout
-        Match k8s.hello*
+        Name              forward
+        Match             k8s.*
+        Host              fluentd
+        Port              24224
 ---
 # Source: fluent-bit/templates/clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -159,15 +177,17 @@ spec:
         app.kubernetes.io/name: fluent-bit
         app.kubernetes.io/instance: release-name
       annotations:
-        checksum/config: 90807040e836dbb782548dd4b5b6406cc2c29d1a4c1db5c3727f2dcf87c4a91f
+        checksum/config: 3a9d4db05f9ad13237e2bac8c9ff26b31762e5b2926517c33758a55e0edc059a
     spec:
       serviceAccountName: release-name-fluent-bit
       hostNetwork: false
       dnsPolicy: ClusterFirst
       containers:
         - name: fluent-bit
-          image: "cr.fluentbit.io/fluent/fluent-bit:2.1.7"
+          image: "cr.fluentbit.io/fluent/fluent-bit:2.1.7-debug"
           imagePullPolicy: Always
+          command:
+            - /fluent-bit/bin/fluent-bit
           args:
             - --workdir=/fluent-bit/etc
             - --config=/fluent-bit/etc/conf/fluent-bit.conf
