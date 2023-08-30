@@ -312,7 +312,7 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-
+    
     <match k8s.**>
         @type elasticsearch
         scheme http
