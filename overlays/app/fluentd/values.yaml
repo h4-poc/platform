@@ -295,18 +295,6 @@ fileConfigs:
       port 24224
     </source>
     
-    <source>
-      @type prometheus_monitor
-      <labels>
-        host ${hostname}
-      </labels>
-    </source>
-    <source>
-      @type prometheus_output_monitor
-      <labels>
-        host ${hostname}
-      </labels>
-    </source>
 
   02_filters.conf: |-
     
@@ -331,6 +319,20 @@ fileConfigs:
 
   04_outputs.conf: |-
     <match k8s.**>
-      @type stdout
+      @type copy
+      <store>
+        @type prometheus
+        <metric>
+          name fluentd_output_status_num_records_total
+          type counter
+          desc The total number of outgoing records
+          <labels>
+            tag ${tag}
+            hostname ${hostname}
+          </labels>
+        </metric>
+      </store>
+      <store>
+        @type stdout
     </match>
     
