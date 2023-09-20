@@ -334,5 +334,6 @@ fileConfigs:
       </store>
       <store>
         @type stdout
+      </store>
     </match>
     
