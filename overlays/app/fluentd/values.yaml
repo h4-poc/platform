@@ -296,15 +296,19 @@ fileConfigs:
     </source>
 
   02_filters.conf: |-
+    
+    
     <filter k8s.**>
-      @type parser
-      key_name log
-      reserve_data true
-      <parse>
-        @type regexp
-        expression /^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)"(?:\s+(?<http_x_forwarded_for>[^ ]+))?)?$/
-        time_format %d/%b/%Y:%H:%M:%S %z
-      </parse>
+      @type prometheus
+      <metric>
+        name fluentd_input_status_num_records_total
+        type counter
+        desc The total number of incoming records
+        <labels>
+          tag ${tag}
+          hostname ${hostname}
+        </labels>
+      </metric>
     </filter>
 
   
@@ -313,21 +317,7 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-    
     <match k8s.**>
-        @type elasticsearch
-        scheme http
-        host "elasticsearch-es-default"
-        port 9200
-        logstash_format true
-        logstash_prefix k8.${tag[2]}
-        ssl_verify false
-        user elastic
-        password Xy0N6LjqZ6L9P131yOn792zT
-        <buffer>
-          @type file
-          path  /var/log/k8s-buf
-          total_limit_size  8192M
-          overflow_action block
-        </buffer>
+      @type stdout
     </match>
+    
