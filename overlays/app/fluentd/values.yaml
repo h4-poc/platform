@@ -274,7 +274,8 @@ dashboards:
 
 ## Fluentd list of plugins to install
 ##
-plugins: []
+plugins:
+  - fluent-plugin-prometheus
 # - fluent-plugin-out-http
 
 ## Add fluentd config files from K8s configMaps
