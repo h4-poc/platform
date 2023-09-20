@@ -296,10 +296,6 @@ fileConfigs:
     </source>
     
     <source>
-      @type prometheus
-      @log_level debug
-    </source>
-    <source>
       @type prometheus_monitor
       <labels>
         host ${hostname}
