@@ -346,7 +346,7 @@ fileConfigs:
       <store>
         @type prometheus
         <metric>
-          name log_info_counter
+          name security_counter
           type counter
           desc The total number of log info records
           key security
