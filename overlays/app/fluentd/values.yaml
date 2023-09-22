@@ -313,6 +313,20 @@ fileConfigs:
       </metric>
     </filter>
     
+    <filter info.**>
+      @type prometheus
+      <metric>
+        name log_info_counter
+        type counter
+        desc The total number of log info records
+        key security
+        <labels>
+          tag ${tag}
+          hostname ${hostname}
+        </labels>
+      </metric>
+    </filter>    
+    
     <filter k8s.**>
       @type record_transformer
       enable_ruby true
