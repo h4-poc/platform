@@ -276,6 +276,7 @@ dashboards:
 ##
 plugins:
   - fluent-plugin-prometheus
+  - fluent-plugin-rewrite-tag-filter
 # - fluent-plugin-out-http
 
 ## Add fluentd config files from K8s configMaps
@@ -311,6 +312,18 @@ fileConfigs:
         </labels>
       </metric>
     </filter>
+    
+    <filter k8s.**>
+      @type record_transformer
+      enable_ruby true
+      <record>
+        security ${record["log"].scan(/^[.+]/).first}
+        tag ${tag}
+      </record>
+    </filter>
+    
+    
+    
 
   
 
@@ -318,7 +331,7 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-    <match k8s.**>
+    <match nginx>
       @type copy
       <store>
         @type prometheus
