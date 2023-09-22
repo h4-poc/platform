@@ -326,7 +326,7 @@ fileConfigs:
           name info_code_counter
           type counter
           desc The total number of log info records
-          key record.num
+          key num
           <labels>
             tag ${tag}
             hostname ${hostname}
