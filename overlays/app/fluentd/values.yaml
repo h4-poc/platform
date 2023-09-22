@@ -299,20 +299,6 @@ fileConfigs:
 
   02_filters.conf: |-
     
-    
-    <filter k8s.**>
-      @type prometheus
-      <metric>
-        name fluentd_input_status_num_records_total
-        type counter
-        desc The total number of incoming records
-        <labels>
-          tag ${tag}
-          hostname ${hostname}
-        </labels>
-      </metric>
-    </filter>
-    
     <filter k8s.**>
       @type parser
       key_name log
@@ -322,26 +308,27 @@ fileConfigs:
         expression /^(?<security>\[.*\])/
       </parse>
     </filter>
-      
     
-    
-
-  
+    <filter k8s.**>
+      @type prometheus
+      <metric>
+        name info_security_counter
+        type counter
+        desc The total number of log info records
+        key security
+        <labels>
+          tag ${tag}
+          hostname ${hostname}
+        </labels>
+      </metric>
+    </filter>  
 
   03_dispatch.conf: |-
 
 
   04_outputs.conf: |-
-    <match k8s.**>
-      @type rewrite_tag_filter
-      <rule>
-        key $['security']
-        pattern /^\[.*\]/
-        tag info
-      </rule>
-    </match>
     
-    <match info>
+    <match k8s.**>
       @type copy
       <store>
         @type prometheus
@@ -361,22 +348,4 @@ fileConfigs:
       </store>
     </match>
     
-    <match k8s.**>
-      @type copy
-      <store>
-        @type prometheus
-        <metric>
-          name fluentd_output_status_num_records_total
-          type counter
-          desc The total number of outgoing records
-          <labels>
-            tag ${tag}
-            hostname ${hostname}
-          </labels>
-        </metric>
-      </store>
-      <store>
-        @type stdout
-      </store>
-    </match>
     
