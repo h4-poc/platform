@@ -312,6 +312,16 @@ fileConfigs:
         </labels>
       </metric>
     </filter>
+    
+    <filter k8s.**>
+      @type parser
+      key_name log
+      reserve_data true
+      <parse>
+        @type regexp
+        expression /^(?<security>\[.*\])/
+      </parse>
+    </filter>
       
     
     
