@@ -331,6 +331,35 @@ fileConfigs:
 
 
   04_outputs.conf: |-
+    <match kubernetes.**>
+      @type rewrite_tag_filter
+      <rule>
+        key $['security']
+        pattern /^\[.*\]/
+        tag info.${tag}
+      </rule>
+    </match>
+    
+    <match info.**>
+      @type copy
+      <store>
+        @type prometheus
+        <metric>
+          name log_info_counter
+          type counter
+          desc The total number of log info records
+          key security
+          <labels>
+            tag ${tag}
+            hostname ${hostname}
+          </labels>
+        </metric>
+      </store>
+      <store>
+        @type stdout
+      </store>
+    </match>
+    
     <match k8s.**>
       @type copy
       <store>
