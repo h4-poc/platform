@@ -317,7 +317,7 @@ fileConfigs:
       @type record_transformer
       enable_ruby true
       <record>
-        security ${record["log"].scan(/^[.+]/).first}
+        security ${record["log"].scan(/^[.+]$/).first}
         tag ${tag}
       </record>
     </filter>
