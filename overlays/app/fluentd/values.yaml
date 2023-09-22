@@ -331,7 +331,7 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-    <match kubernetes.**>
+    <match k8s.**>
       @type rewrite_tag_filter
       <rule>
         key $['security']
