@@ -304,6 +304,7 @@ fileConfigs:
     <filter k8s.**>
       @type record_transformer
       enable_ruby true
+      auto_typecast true
       <record>
         num 1
         tag ${tag}
