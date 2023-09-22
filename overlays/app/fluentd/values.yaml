@@ -337,16 +337,16 @@ fileConfigs:
       <rule>
         key $['security']
         pattern /^\[.*\]/
-        tag info.${tag}
+        tag info
       </rule>
     </match>
     
-    <match info.**>
+    <match info>
       @type copy
       <store>
         @type prometheus
         <metric>
-          name info.k8s.hello2.default_security_counter
+          name info_security_counter
           type counter
           desc The total number of log info records
           key security
