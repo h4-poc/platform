@@ -331,7 +331,7 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-    <match nginx>
+    <match k8s.**>
       @type copy
       <store>
         @type prometheus
