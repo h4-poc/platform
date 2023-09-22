@@ -332,7 +332,14 @@ fileConfigs:
 
 
   04_outputs.conf: |-
-    
+    <match k8s.**>
+      @type rewrite_tag_filter
+      <rule>
+        key $['security']
+        pattern /^\[.*\]/
+        tag info.${tag}
+      </rule>
+    </match>
     
     <match info.**>
       @type copy
