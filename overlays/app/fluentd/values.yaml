@@ -310,12 +310,20 @@ fileConfigs:
     </filter>
     
     <filter k8s.**>
+      @type record_transformer
+      <record>
+        num 1
+        tag ${tag}
+      </record>
+    </filter>
+    
+    <filter k8s.**>
       @type prometheus
       <metric>
-        name info_security_counter
+        name info_num_counter
         type counter
         desc The total number of log info records
-        key security
+        key num
         <labels>
           tag ${tag}
           hostname ${hostname}
@@ -333,7 +341,7 @@ fileConfigs:
       <store>
         @type prometheus
         <metric>
-          name info_security_counter
+          name info_num_counter
           type counter
           desc The total number of log info records
           key security
