@@ -331,7 +331,7 @@ fileConfigs:
           <labels>
             tag ${tag}
             hostname ${hostname}
-            pod_name  ${kubernetes['pod_name']}
+            pod_name ${kubernetes['pod_name']}
           </labels>
         </metric>
       </store>
