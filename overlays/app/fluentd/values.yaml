@@ -298,7 +298,7 @@ fileConfigs:
     
 
   02_filters.conf: |-
-    <filter foo.bar>
+    <filter k8s.**>
       @type record_transformer
       enable_ruby true
       auto_typecast true
