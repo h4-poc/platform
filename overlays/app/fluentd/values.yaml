@@ -298,16 +298,14 @@ fileConfigs:
     
 
   02_filters.conf: |-
-    <filter k8s.**>
-      @type parser
-      key_name log
-      reserve_data true
-      <parse>
-        @type regexp
-        expression /^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)"(?:\s+(?<http_x_forwarded_for>[^ ]+))?)?$/
-        time_format %d/%b/%Y:%H:%M:%S %z
-        types code:integer
-      </parse>
+    <filter foo.bar>
+      @type record_transformer
+      enable_ruby
+      <record>
+        num 1
+        tag ${tag}
+        types num:integer
+      </record>
     </filter>
 
     
@@ -328,7 +326,7 @@ fileConfigs:
           name info_code_counter
           type counter
           desc The total number of log info records
-          key code
+          key num
           <labels>
             tag ${tag}
             hostname ${hostname}
