@@ -300,7 +300,8 @@ fileConfigs:
   02_filters.conf: |-
     <filter foo.bar>
       @type record_transformer
-      enable_ruby
+      enable_ruby true
+      auto_typecast true
       <record>
         num 1
         tag ${tag}
