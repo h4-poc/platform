@@ -303,9 +303,9 @@ fileConfigs:
       enable_ruby true
       auto_typecast true
       <record>
-        num ${1}
+        method_num ${record['log'].downcase.include?('get') ? 1 : 0}
         tag ${tag}
-        types num:integer
+        
       </record>
     </filter>
 
@@ -327,7 +327,7 @@ fileConfigs:
           name info_code_counter
           type counter
           desc The total number of log info records
-          key num
+          key method_num
           <labels>
             tag ${tag}
             hostname ${hostname}
