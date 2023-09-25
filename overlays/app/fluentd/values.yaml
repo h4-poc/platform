@@ -303,7 +303,7 @@ fileConfigs:
       enable_ruby true
       auto_typecast true
       <record>
-        num 1
+        num ${1}
         tag ${tag}
         types num:integer
       </record>
