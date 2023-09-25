@@ -275,7 +275,7 @@ dashboards:
 ## Fluentd list of plugins to install
 ##
 plugins:
-  - fluent-plugin-prometheus
+#  - fluent-plugin-prometheus
   - fluent-plugin-rewrite-tag-filter
 # - fluent-plugin-out-http
 
