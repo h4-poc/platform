@@ -402,7 +402,7 @@ config:
     [OUTPUT]
         Name              forward
         Match             k8s.*
-        Host              fluentd
+        Host              mid-fluentd
         Port              24224
 
   ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/upstream-servers
