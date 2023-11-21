@@ -47,7 +47,6 @@ spec:
           @type prometheus
           bind 0.0.0.0
           port 2021
-          metrics_path /metrics
         </source>
   - recordTransformer:
       autoTypecast: true
@@ -77,9 +76,9 @@ spec:
                 type counter
                 desc the total num log
                 key num
-                <label>
+                <labels>
                   pod busybox
-                </label>
+                </labels>
               </metric>
             </store>
             <store>
