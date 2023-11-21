@@ -46,7 +46,7 @@ spec:
       enableRuby: true
       records:
       - key: num
-        value: ${record['log'].downcase.include?('ss') ? 1 : 0}
+        value: "${record['log'].downcase.include?('ss') ? 1 : 0}"
 
 
 ---
