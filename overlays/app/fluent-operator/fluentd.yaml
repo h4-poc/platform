@@ -71,7 +71,7 @@ spec:
           <match **>
             @type copy
             <store>
-              type @prometheus
+              @type prometheus
               <metric>
                 name log_count
                 type counter
@@ -83,7 +83,7 @@ spec:
               </metric>
             </store>
             <store>
-              type @stdout
+              @type stdout
             </store>
           </match>
 
