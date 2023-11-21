@@ -370,9 +370,9 @@ config:
     [INPUT]
         Name              tail
         Tag               kube.*
-        Path              /var/log/containers/*hello*.log
+        Path              /var/log/containers/*test-busybox*.log
         Parser            docker_parser
-        DB                /var/log/flb_kube_hello.db
+        DB                /var/log/flb_kube.db
         Mem_Buf_Limit     100MB
         Skip_Long_Lines   Off
         Refresh_Interval  10
