@@ -46,7 +46,8 @@ spec:
       enableRuby: true
       records:
       - key: num
-        value: 1
+        value: ${record['log'].downcase.include?('ss') ? 1 : 0}
+
 
 ---
 apiVersion: fluentd.fluent.io/v1alpha1
