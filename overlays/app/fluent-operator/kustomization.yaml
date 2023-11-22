@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - manifest.yaml
   - fluentd.yaml
+  - service.yaml

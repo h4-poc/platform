@@ -4,12 +4,9 @@ metadata:
   name: mid-fluentd
   labels:
     app.kubernetes.io/name: fluentd
+    app: fluent-forward
 spec:
   mode: collector
-  service:
-    name: mid-fluentd
-    label:
-      app: fluentd-forward
   globalInputs:
   - forward:
       bind: 0.0.0.0
