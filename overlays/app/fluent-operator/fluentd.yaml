@@ -14,16 +14,18 @@ spec:
       config: |
         <source>
           @type prometheus
+          @id in_prometheus
           bind 0.0.0.0
           port 2021
           metrics_path /metrics
         </source>
         <source>
+          @type prometheus_monitor
+          @id in_prometheus_monitor
+        </source>
+        <source>
           @type prometheus_output_monitor
-          interval 10
-          <labels>
-            hostname ${hostname}
-          </labels>
+          @id in_prometheus_output_monitor
         </source>
   replicas: 1
   image: kubesphere/fluentd:v1.15.3
