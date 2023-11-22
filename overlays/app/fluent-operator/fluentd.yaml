@@ -5,10 +5,14 @@ metadata:
   labels:
     app.kubernetes.io/name: fluentd
 spec:
+  mode: collector
   globalInputs:
   - forward:
       bind: 0.0.0.0
       port: 24224
+  - monitorAgent:
+      bind: 0.0.0.0
+      port: 24231
   replicas: 1
   image: kubesphere/fluentd:v1.15.3
   fluentdCfgSelector:
