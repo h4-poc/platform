@@ -18,6 +18,13 @@ spec:
           port 2021
           metrics_path /metrics
         </source>
+        <source>
+          @type prometheus_output_monitor
+          interval 10
+          <labels>
+            hostname ${hostname}
+          </labels>
+        </source>
   replicas: 1
   image: kubesphere/fluentd:v1.15.3
   fluentdCfgSelector:
