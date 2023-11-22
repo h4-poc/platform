@@ -6,6 +6,10 @@ metadata:
     app.kubernetes.io/name: fluentd
 spec:
   mode: collector
+  service:
+    name: mid-fluentd
+    label:
+      app: fluentd-forward
   globalInputs:
   - forward:
       bind: 0.0.0.0
@@ -59,13 +63,6 @@ metadata:
     filter.fluentd.fluent.io/enabled: "true"
 spec:
   filters:
-  - customPlugin:
-      config: |
-        <source>
-          @type prometheus
-          bind 0.0.0.0
-          port 2021
-        </source>
   - recordTransformer:
       autoTypecast: true
       enableRuby: true
