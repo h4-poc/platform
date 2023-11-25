@@ -66,6 +66,19 @@ spec:
       records:
       - key: num
         value: "${record['log'].downcase.include?('ss') ? 1 : 0}"
+  - customPlugin:
+      config: |
+        <filter **>
+          @type prometheus
+          <metric>
+            name log_count
+            type counter
+            desc the total num log
+            <labels>
+              pod busybox
+            </labels>
+          </metric>
+        </filter>
 
 
 ---
@@ -80,22 +93,27 @@ spec:
     - customPlugin:
         config: |
           <match **>
-            @type copy
-            <store>
-              @type prometheus
-              <metric>
-                name log_count
-                type counter
-                desc the total num log
-                key num
-                <labels>
-                  pod busybox
-                </labels>
-              </metric>
-            </store>
-            <store>
-              @type stdout
-            </store>
+            @type stdout
           </match>
+#    - customPlugin:
+#        config: |
+#          <match **>
+#            @type copy
+#            <store>
+#              @type prometheus
+#              <metric>
+#                name log_count
+#                type counter
+#                desc the total num log
+#                key num
+#                <labels>
+#                  pod busybox
+#                </labels>
+#              </metric>
+#            </store>
+#            <store>
+#              @type stdout
+#            </store>
+#          </match>
 
 
