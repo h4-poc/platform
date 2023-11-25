@@ -74,6 +74,7 @@ spec:
             name log_count
             type counter
             desc the total num log
+            key num
             <labels>
               pod busybox
             </labels>
