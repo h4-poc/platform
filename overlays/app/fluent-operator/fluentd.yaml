@@ -29,7 +29,7 @@ spec:
           @id in_prometheus_output_monitor
         </source>
   replicas: 1
-  image: kubesphere/fluentd:v1.15.3
+  image: bwei/fluentd:v1.14.4.5
   fluentdCfgSelector:
     matchLabels:
       config.fluentd.fluent.io/enabled: "true"
