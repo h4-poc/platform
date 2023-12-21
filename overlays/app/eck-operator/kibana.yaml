@@ -1,38 +1,38 @@
-# Source: eck-stack/charts/eck-kibana/templates/kibana.yaml
-apiVersion: kibana.k8s.elastic.co/v1
-kind: Kibana
-metadata:
-  name: release-name-eck-kibana
-spec:
-  version: 8.9.1
-  http:
-    tls:
-      selfSignedCertificate:
-        disabled: true
-  count: 1
-  elasticsearchRef:
-    name: elasticsearch
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: kibana-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/affinity: cookie
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: kibana.bwei.live
-    http:
-      paths:
-      - path: / # 该配置表示将dev.xxx.com的请求转发到serviceName为nginx，servicePort为80的服务上
-        pathType: Prefix
-        backend:
-          service:
-            name: release-name-eck-kibana-kb-http
-            port:
-              name: http
-
+## Source: eck-stack/charts/eck-kibana/templates/kibana.yaml
+#apiVersion: kibana.k8s.elastic.co/v1
+#kind: Kibana
+#metadata:
+#  name: release-name-eck-kibana
+#spec:
+#  version: 8.9.1
+#  http:
+#    tls:
+#      selfSignedCertificate:
+#        disabled: true
+#  count: 1
+#  elasticsearchRef:
+#    name: elasticsearch
+#
+#---
+#
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: kibana-ingress
+#  annotations:
+#    nginx.ingress.kubernetes.io/affinity: cookie
+#    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#  - host: kibana.bwei.live
+#    http:
+#      paths:
+#      - path: / # 该配置表示将dev.xxx.com的请求转发到serviceName为nginx，servicePort为80的服务上
+#        pathType: Prefix
+#        backend:
+#          service:
+#            name: release-name-eck-kibana-kb-http
+#            port:
+#              name: http
+#

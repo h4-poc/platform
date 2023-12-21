@@ -1,67 +1,67 @@
----
-# Source: eck-stack/charts/eck-elasticsearch/templates/elasticsearch.yaml
-apiVersion: elasticsearch.k8s.elastic.co/v1
-kind: Elasticsearch
-metadata:
-  name: elasticsearch
-spec:
-  version: 8.9.1
-  http:
-    tls:
-      selfSignedCertificate:
-        disabled: true
-  nodeSets:
-    - config:
-        node.store.allow_mmap: false
-      count: 1
-      volumeClaimTemplates:
-      - metadata:
-          name: elasticsearch-data
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: 20Gi
-          storageClassName: standard
-      name: default
-      podTemplate:
-        spec:
-          containers:
-          - name: elasticsearch
-            resources:
-              limits:
-                memory: 3Gi
-              requests:
-                memory: 1Gi
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: elastic-ingress
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: elastic.bwei.live
-    http:
-      paths:
-      - backend:
-          service:
-            name: elasticsearch-es-http
-            port:
-              name: http
-        path: /
-        pathType: Prefix
-
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: eck-trial-license
-  labels:
-    license.k8s.elastic.co/type: enterprise_trial
-  annotations:
-    elastic.co/eula: accepted
-
-
+#---
+## Source: eck-stack/charts/eck-elasticsearch/templates/elasticsearch.yaml
+#apiVersion: elasticsearch.k8s.elastic.co/v1
+#kind: Elasticsearch
+#metadata:
+#  name: elasticsearch
+#spec:
+#  version: 8.9.1
+#  http:
+#    tls:
+#      selfSignedCertificate:
+#        disabled: true
+#  nodeSets:
+#    - config:
+#        node.store.allow_mmap: false
+#      count: 1
+#      volumeClaimTemplates:
+#      - metadata:
+#          name: elasticsearch-data
+#        spec:
+#          accessModes:
+#            - ReadWriteOnce
+#          resources:
+#            requests:
+#              storage: 20Gi
+#          storageClassName: standard
+#      name: default
+#      podTemplate:
+#        spec:
+#          containers:
+#          - name: elasticsearch
+#            resources:
+#              limits:
+#                memory: 3Gi
+#              requests:
+#                memory: 1Gi
+#---
+#
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: elastic-ingress
+#spec:
+#  ingressClassName: nginx
+#  rules:
+#  - host: elastic.bwei.live
+#    http:
+#      paths:
+#      - backend:
+#          service:
+#            name: elasticsearch-es-http
+#            port:
+#              name: http
+#        path: /
+#        pathType: Prefix
+#
+#---
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: eck-trial-license
+#  labels:
+#    license.k8s.elastic.co/type: enterprise_trial
+#  annotations:
+#    elastic.co/eula: accepted
+#
+#
