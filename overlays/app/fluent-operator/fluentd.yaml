@@ -95,7 +95,18 @@ spec:
     - customPlugin:
         config: |
           <match **>
-            @type stdout
+            @type copy
+            <store>
+              @type stdout
+            </store>
+            <store>
+              @type loki
+              url "http://loki:3100/loki/api/v1/push"
+              extra_labels {"foo":"bar"}
+              flush_interval 10s
+              flush_at_shutdown true
+              buffer_chunk_limit 1m
+            </store>
           </match>
 #    - customPlugin:
 #        config: |
