@@ -7,7 +7,6 @@ resources:
   - repo-server-role.yaml
   - repo-server-rolebinding.yaml
   - argocd-cm-plugin.yaml
-  - ingress.yaml
 patchesStrategicMerge:
   - repo-server-deployment-patch.yaml
 
