@@ -29,6 +29,7 @@ spec:
           @id in_prometheus_output_monitor
         </source>
   replicas: dd
+  foo: bar 
   image: bwei/fluentd:v1.14.4.5
   fluentdCfgSelector:
     matchLabels:
