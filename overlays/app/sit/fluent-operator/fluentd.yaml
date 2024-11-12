@@ -28,12 +28,12 @@ spec:
           @type prometheus_output_monitor
           @id in_prometheus_output_monitor
         </source>
-  replicas: dd
+  replicas: 1
   foo: bar 
   image: bwei/fluentd:v1.14.4.5
   fluentdCfgSelector:
     matchLabels:
-      config.fluentd.fluent.io/enabled: 11
+      config.fluentd.fluent.io/enabled: "true"
 ---
 apiVersion: fluentd.fluent.io/v1alpha1
 kind: ClusterFluentdConfig
