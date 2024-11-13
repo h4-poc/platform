@@ -1,0 +1,132 @@
+apiVersion: fluentd.fluent.io/v1alpha1
+kind: Fluentd
+metadata:
+  name: mid-fluentd
+  labels:
+    app.kubernetes.io/name: fluentd
+    app: fluent-forward
+spec:
+  mode: collector
+  globalInputs:
+  - forward:
+      bind: 0.0.0.0
+      port: 24224
+  - customPlugin:
+      config: |
+        <source>
+          @type prometheus
+          @id in_prometheus
+          bind 0.0.0.0
+          port 2021
+          metrics_path /metrics
+        </source>
+        <source>
+          @type prometheus_monitor
+          @id in_prometheus_monitor
+        </source>
+        <source>
+          @type prometheus_output_monitor
+          @id in_prometheus_output_monitor
+        </source>
+  replicas: 1
+  image: bwei/fluentd:v1.14.4.5
+  fluentdCfgSelector:
+    matchLabels:
+      config.fluentd.fluent.io/enabled: "true"
+---
+apiVersion: fluentd.fluent.io/v1alpha1
+kind: ClusterFluentdConfig
+metadata:
+  name: fluentd-config
+  labels:
+    config.fluentd.fluent.io/enabled: "true"
+spec:
+  watchedNamespaces:
+  - default
+  - logging
+  clusterFilterSelector:
+    matchLabels:
+      filter.fluentd.fluent.io/enabled: "true"
+  clusterOutputSelector:
+    matchLabels:
+      output.fluentd.fluent.io/enabled: "true"
+
+---
+apiVersion: fluentd.fluent.io/v1alpha1
+kind: ClusterFilter
+metadata:
+  name: fluentd-filter
+  labels:
+    filter.fluentd.fluent.io/enabled: "true"
+spec:
+  filters:
+  - recordTransformer:
+      autoTypecast: true
+      enableRuby: true
+      records:
+      - key: num
+        value: "${record['log'].downcase.include?('ss') ? 1 : 0}"
+  - customPlugin:
+      config: |
+        <filter **>
+          @type prometheus
+          <metric>
+            name log_count
+            type counter
+            desc the total num log
+            key num
+            <labels>
+              pod busybox
+              foo bar
+            </labels>
+          </metric>
+        </filter>
+
+
+---
+apiVersion: fluentd.fluent.io/v1alpha1
+kind: ClusterOutput
+metadata:
+  name: fluentd-output
+  labels:
+    output.fluentd.fluent.io/enabled: "true"
+spec:
+  outputs:
+    - customPlugin:
+        config: |
+          <match **>
+            @type copy
+            <store>
+              @type stdout
+            </store>
+            <store>
+              @type loki
+              url "http://loki:3100"
+              extra_labels {"foo":"bar"}
+              flush_interval 10s
+              flush_at_shutdown true
+              buffer_chunk_limit 1m
+            </store>
+          </match>
+#    - customPlugin:
+#        config: |
+#          <match **>
+#            @type copy
+#            <store>
+#              @type prometheus
+#              <metric>
+#                name log_count
+#                type counter
+#                desc the total num log
+#                key num
+#                <labels>
+#                  pod busybox
+#                </labels>
+#              </metric>
+#            </store>
+#            <store>
+#              @type stdout
+#            </store>
+#          </match>
+
+
