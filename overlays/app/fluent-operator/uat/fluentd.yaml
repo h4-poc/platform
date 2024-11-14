@@ -28,7 +28,7 @@ spec:
           @type prometheus_output_monitor
           @id in_prometheus_output_monitor
         </source>
-  replicas: 1
+  replicas: ddd
   image: bwei/fluentd:v1.14.4.5
   fluentdCfgSelector:
     matchLabels:
