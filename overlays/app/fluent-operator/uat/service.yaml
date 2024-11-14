@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluent-metrics
+spec:
+  selector:
+    app: fluent-forward
+  ports:
+  - name: metrics
+    protocol: TCP
+    port: 2021
+    targetPort: metrics
